@@ -1,0 +1,50 @@
+#include<iostream> 
+using namespace std; 
+void findWaitingTime(int* processes, int n, int* burst, int wait[]) 
+{ 
+	wait[0] = 0; 
+	for (int i = 1; i < n ; i++ ) 
+		wait[i] = burst[i-1] + wait[i-1] ; 
+} 
+
+void findTurnAroundTime( int* processes, int n,	int* burst, int wait[], int turn[]) 
+{
+	for (int i = 0; i < n ; i++) 
+		turn[i] = burst[i] + wait[i]; 
+} 
+void findavgTime( int* processes, int n, int* burst) 
+{ 
+	int wait[n], turn[n], total_wt = 0, total_tat = 0; 
+	findWaitingTime(processes, n, burst, wait); 
+	findTurnAroundTime(processes, n, burst, wait, turn); 
+	cout << "Processes "<< " Burst time "<< " Waiting time " << " Turn around time\n"; 
+
+	for (int i=0; i<n; i++) 
+	{ 
+		total_wt = total_wt + wait[i]; 
+		total_tat = total_tat + turn[i]; 
+		cout << " " << i+1 << "\t\t" << burst[i] <<"\t "
+			<< wait[i] <<"\t\t " << turn[i] <<endl; 
+	} 
+
+	cout << "Average waiting time = "<< (float)total_wt / (float)n; 
+	cout << "\nAverage turn around time = "<< (float)total_tat / (float)n; 
+} 
+
+int main() 
+{  int size;
+   cout<<"Number of processes you want:";
+   cin>>size;
+    int* processes=new int[size];
+    int* burst_time=new int[size];
+     cout<<"PID"<<"    "<<"Burst Time\n"; 
+    for(int i=0;i<size;i++){
+        cin>>processes[i]>>burst_time[i];
+    }
+	findavgTime(processes, size, burst_time); 
+	return 0; 
+} 
+
+
+
+
