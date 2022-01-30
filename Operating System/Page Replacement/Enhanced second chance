@@ -1,0 +1,90 @@
+#include<bits/stdc++.h>
+#define Max 1000
+using namespace std;
+
+int main(){
+    int n,m;
+    cout<<"Enter the number of processes: ";
+    cin>>n;
+    cout<<"Enter the number of frames: ";
+    cin>>m;
+    int *a=new int[n];
+    cout<<"Enter the page reference string: ";
+    int *fifo=new int[n];
+    for(int i=0;i<n;i++){
+   	 cin>>a[i];
+    }
+    bool *modified=new bool[n];
+    for(int i=0;i<n;i++){
+   	 int mod;
+   	 cin>>mod;
+   	 if(mod==1){
+   		 modified[i]=true;
+   	 }
+   	 else{
+   		 modified[i]=false;
+   	 }
+    }
+    int *r=new int[Max]();
+    int *M=new int[Max]();
+    int *check=new int[Max]();
+    int nof=0;
+    int pf=0;
+    for(int i=0;i<n;i++){
+   	 if(check[a[i]]==1){
+   		 r[a[i]]=1;
+   		 if(modified[i]==true){
+   			 M[a[i]]=1;
+   		 }
+   		 continue;
+   	 }
+   	 else if(nof<m){
+   		 fifo[i]=a[i];
+   		 if(modified[i]==true){
+   			 M[a[i]]=1;
+   		 }
+   		 check[a[i]]=1;
+   		 nof++;
+   	 }
+   	 else{
+   		 fifo[i]=a[i];
+   		 pf++;
+   		 int pro=-1;
+   		 while(pro==-1){
+   			 for(int j=0;j<i;j++){
+   				 if(fifo[j]==-1){
+   					 continue;
+   				 }
+   				 else if(r[fifo[j]]==0&&M[fifo[j]]==0){
+   					 pro=j;
+   					 break;
+   				 }
+   				 r[fifo[j]]=0;
+   			 }
+   			 for(int j=0;j<i;j++){
+   				 if(fifo[j]==-1){
+   					 continue;
+   				 }
+   				 else if(r[fifo[j]]==0&&M[fifo[j]]==1){
+   					 pro=j;
+   					 break;
+   				 }
+   				 r[fifo[j]]=0;
+   			 }
+   		 }
+   		 r[fifo[pro]]=0;
+   		 M[fifo[pro]]=0;
+   		 check[fifo[pro]]=0;
+   		 fifo[pro]=-1;
+   	 }
+    }
+    cout<<"\nPage fault occurs "<<(pf+m)<<" number of times";
+    delete[] a;
+    delete[] r;
+    delete[] check;
+    delete[] M;
+    delete[] modified;
+    delete[] fifo;
+    return 0;
+}
+
