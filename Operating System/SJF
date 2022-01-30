@@ -1,0 +1,73 @@
+#include<bits/stdc++.h>
+
+using namespace std;
+ 
+struct Pair
+{
+   int pid;
+   int burst;     
+};
+ 
+bool comparison(Pair a, Pair b)
+{
+    return (a.burst < b.burst);
+}
+
+void findWaitingTime(Pair* processes, int n, int wait[])
+{
+    wait[0] = 0;
+
+    for (int i = 1; i < n ; i++)
+    {
+        wait[i] = processes[i-1].burst + wait[i-1] ;
+    }
+}
+void findTurnAroundTime(Pair* processes, int n, int wait[], int turn[])
+{
+    for (int i = 0; i < n ; i++)
+    {
+        turn[i] = processes[i].burst + wait[i];
+    }
+}
+
+void findAverageTime(Pair* processes, int n)
+{
+    int wait[n], turn[n], total_wt = 0, total_tat = 0;
+    findWaitingTime(processes, n, wait);
+    findTurnAroundTime(processes, n, wait, turn);
+    cout << "\nProcesses "<< " Burst time " << " Waiting time " << " Turn around time\n";
+    for (int i = 0; i < n; i++)
+    {
+        total_wt = total_wt + wait[i];
+        total_tat = total_tat + turn[i];
+        cout << " " << processes[i].pid << "\t\t" << processes[i].burst << "\t " << wait[i]
+             << "\t\t " << turn[i] <<endl;
+    }
+ 
+    cout << "Average waiting time = "
+         << (float)total_wt / (float)n;
+    cout << "\nAverage turn around time = "
+         << (float)total_tat / (float)n;
+}
+
+int main()
+{   int size;
+   cout<<"Number of processes you want:";
+   cin>>size;
+    Pair* processes=new Pair[size];
+    cout<<"PID"<<"    "<<"Burst Time\n"; 
+    for(int i=0;i<size;i++){
+        cin>>processes[i].pid>>processes[i].burst;
+    }
+    sort(processes, processes + size, comparison);
+     
+    cout << "Order in which process gets executed\n";
+    for (int i = 0 ; i < size; i++)
+    {
+        cout << processes[i].pid <<" ";
+    }
+    findAverageTime(processes, size);
+    
+    return 0;
+}
+
